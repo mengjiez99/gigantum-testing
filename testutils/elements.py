@@ -97,6 +97,10 @@ class AddProjectBaseElements(UiElement):
         return self.driver.find_element_by_xpath(
             "//h6[contains(text(), 'R Tidyverse (+ Python3) in Jupyter Quickstart')]")
 
+class ActivityElements(UiElement)
+    @property
+    def activity_tab_button(self):
+        return self.driver.find_element_by_css_selector("#activity")
 
 class EnvironmentElements(UiElement):
     @property
