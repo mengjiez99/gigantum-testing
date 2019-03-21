@@ -32,7 +32,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     # wait
     wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex > .Stopped")))
-    time.sleep(2)
+    time.sleep(3)
     # pip packages
     testutils.add_pip_package(driver)
     time.sleep(2)
@@ -62,7 +62,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     driver.switch_to.window(window_handles[0])
     activity = testutils.elements.ActivityElements(driver)
     activity.activity_tab_button.click()
-    top_activity = driver.find_element_by_css_selector(".ActivityCard__commit-message").text()
+    top_activity = driver.find_element_by_css_selector(".ActivityCard__commit-message").text
     print(top_activity)
 
 
