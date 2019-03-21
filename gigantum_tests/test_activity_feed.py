@@ -32,6 +32,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     # wait
     wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex > .Stopped")))
+    time.sleep(2)
     # pip packages
     testutils.add_pip_package(driver)
     time.sleep(2)
@@ -55,10 +56,13 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
                      "x.plot()\nplt.show()"
     actions.move_to_element(el).click(el).send_keys(plot_script).perform()
     driver.find_element_by_css_selector(".jp-RunIcon").click()
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".jp-mod-active")))
 
     # check activity feed
     driver.switch_to.window(window_handles[0])
     activity = testutils.elements.ActivityElements(driver)
     activity.activity_tab_button.click()
+    top_activity = driver.find_element_by_css_selector(".ActivityCard__commit-message").text()
+    print(top_activity)
 
 
