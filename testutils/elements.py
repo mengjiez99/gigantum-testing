@@ -187,5 +187,12 @@ class AddDatasetElements(UiElement):
     def publish_dataset_button(self):
         return self.driver.find_element_by_css_selector(".BranchMenu__btn--sync--publish")
 
+    @property
+    def dataset_cloud_page(self):
+        return self.driver.find_element_by_css_selector(".Datasets__nav-item--cloud")
+
+    @property
+    def publish_confirm_button(self):
+        return self.driver.find_element_by_css_selector(".VisibilityModal__buttons > button")
 
 

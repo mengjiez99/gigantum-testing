@@ -10,6 +10,7 @@ from testutils import elements
 from testutils import testutils
 
 
+
 # create project
 def log_in(driver: selenium.webdriver) -> str:
     """
@@ -283,7 +284,7 @@ def create_dataset(driver: selenium.webdriver) -> str:
     dataset_elts.create_dataset_button.click()
     return unique_dataset_name
 
-def publish_dataset(driver: selenium.webdriver)
+def publish_dataset(driver: selenium.webdriver):
     """
     Upload files to a dataset.
 
@@ -291,11 +292,14 @@ def publish_dataset(driver: selenium.webdriver)
         driver
 
     """
-    logging.info("Uploading files to dataset")
+    logging.info("Publish dataset to cloud")
     dataset_elts = elements.AddDatasetElements(driver)
     dataset_elts.publish_dataset_button.click()
-    time.sleep(5)
+    dataset_elts.publish_confirm_button.click()
     dataset_elts.dataset_page_tab.click()
+    dataset_elts.dataset_cloud_page.click()
+
+
 
 
 

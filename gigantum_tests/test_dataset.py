@@ -27,4 +27,15 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(2)
     testutils.create_dataset(driver)
     time.sleep(2)
+    testutils.publish_dataset(driver)
+    time.sleep(5)
+
+    # clean up datasets local and remote
+
+
+
+
+
+
+
 
