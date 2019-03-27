@@ -38,6 +38,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(2)
     # wait until container status is stopped
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex > .Stopped")))
+    time.sleep(2)
     assert testutils.is_container_stopped(driver), "Expected stopped container"
 
     # check pip packages version from jupyterlab
@@ -52,6 +53,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     actions = ActionChains(driver)
     # implement script the import packages and print the versions.
     plot_script = "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n" \
+                     "%matplotlib inline\n" \
                      "x = pd.DataFrame(np.random.randint(100, size=(10,10)))\n" \
                      "x.plot()\nplt.show()"
     actions.move_to_element(el).click(el).send_keys(plot_script).perform()
