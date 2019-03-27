@@ -296,8 +296,13 @@ def publish_dataset(driver: selenium.webdriver):
     dataset_elts = elements.AddDatasetElements(driver)
     dataset_elts.publish_dataset_button.click()
     dataset_elts.publish_confirm_button.click()
+    time.sleep(5)
     dataset_elts.dataset_page_tab.click()
+    time.sleep(5)
     dataset_elts.dataset_cloud_page.click()
+
+
+
 
 
 

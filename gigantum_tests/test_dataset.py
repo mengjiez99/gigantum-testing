@@ -25,10 +25,17 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(2)
     testutils.remove_guide(driver)
     time.sleep(2)
-    testutils.create_dataset(driver)
+    # create and publish datset
+    dataset_title = testutils.create_dataset(driver)
     time.sleep(2)
     testutils.publish_dataset(driver)
-    time.sleep(5)
+    time.sleep(15)
+    # check published dataset in the cloud
+    print(dataset_title)
+    dataset_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
+    print(dataset_cloud)
+    assert dataset_title in dataset_cloud, "Expected dataset to be in cloud tab"
+
 
     # clean up datasets local and remote
 
