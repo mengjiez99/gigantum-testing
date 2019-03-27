@@ -153,3 +153,39 @@ class ContainerStatus(UiElement):
     def container_status_stop(self):
         return self.driver.find_element_by_css_selector(".flex>.Stopped")
 
+
+class AddDatasetElements(UiElement):
+    @property
+    def dataset_page_tab(self):
+        return self.driver.find_element_by_xpath("//a[contains(text(), 'Datasets')]")
+
+    @property
+    def create_new_button(self):
+        return self.driver.find_element_by_css_selector(".btn--import")
+
+    @property
+    def dataset_title_input(self):
+        return self.driver.find_element_by_css_selector(".CreateLabbook input")
+
+    @property
+    def dataset_description_input(self):
+        return self.driver.find_element_by_css_selector(".CreateLabbook__description-input")
+
+    @property
+    def dataset_continue_button(self):
+        return self.driver.find_element_by_xpath("//button[contains(text(), 'Continue')]")
+
+    @property
+    def gigantum_cloud_button(self):
+        return self.driver.find_element_by_xpath("//h6[contains(text(), 'Gigantum Cloud')]")
+
+    @property
+    def create_dataset_button(self):
+        return self.driver.find_element_by_css_selector(".ButtonLoader ")
+
+    @property
+    def publish_dataset_button(self):
+        return self.driver.find_element_by_css_selector(".BranchMenu__btn--sync--publish")
+
+
+
