@@ -36,13 +36,26 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     print(dataset_cloud)
     assert dataset_title in dataset_cloud, "Expected dataset to be in cloud tab"
 
-
     # clean up datasets local and remote
-
-
-
-
-
+    # Delete cloud project
+    driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
+    time.sleep(2)
+    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title)
+    time.sleep(2)
+    driver.find_element_by_css_selector(".ButtonLoader").click()
+    time.sleep(5)
+    assert dataset_title not in dataset_cloud, "Expected project to be removed from cloud tab"
+    driver.find_element_by_css_selector(".Datasets__nav-item--local").click()
+    time.sleep(2)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".LocalDatasets__row--icons")))
+    dataset_local = driver.find_element_by_css_selector(".LocalDatasets__panel-title:first-child span span").text
+    assert dataset_title in dataset_local, "Expected project in local tab"
+    driver.find_element_by_css_selector(".LocalDatasets__panel-title").click()
+    driver.find_element_by_css_selector(".ActionsMenu__btn").click()
+    driver.find_element_by_css_selector(".ActionsMenu__item--delete").click()
+    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title)
+    driver.find_element_by_css_selector(".ButtonLoader").click()
+    assert dataset_title not in dataset_local, "Expected project deleted in local tab"
 
 
 
