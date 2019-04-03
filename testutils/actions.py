@@ -290,24 +290,7 @@ def create_dataset(driver: selenium.webdriver) -> str:
     return unique_dataset_name
 
 
-def publish_dataset(driver: selenium.webdriver):
-    """
-    Publish a dataset to cloud.
 
-    Args:
-        driver
-
-    """
-    logging.info("Publish dataset to cloud")
-    dataset_elts = elements.AddDatasetElements(driver)
-    dataset_elts.publish_dataset_button.click()
-    dataset_elts.publish_confirm_button.click()
-    time.sleep(5)
-    dataset_elts.dataset_page_tab.click()
-    time.sleep(5)
-    dataset_elts.dataset_cloud_page.click()
-    wait = WebDriverWait(driver, 200)
-    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".VisibilityModal__buttons")))
 
 
 
