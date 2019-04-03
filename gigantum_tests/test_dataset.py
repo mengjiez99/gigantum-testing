@@ -14,7 +14,7 @@ import testutils
 
 def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     """
-    Test that dataset is created and linked successfully.
+    Test that dataset is created and published successfully.
 
     Args:
         driver
