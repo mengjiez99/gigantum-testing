@@ -53,8 +53,10 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(10)
     window_handles = driver.window_handles
     driver.switch_to.window(window_handles[1])
+    logging.info("Switching to jupyter lab")
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "[title = code]")))
     driver.find_element_by_css_selector(".jp-LauncherCard-label").click()
+    logging.info("Launching jupyter notebook")
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".CodeMirror-line")))
     el = driver.find_element_by_css_selector(".CodeMirror-line")
     actions = ActionChains(driver)
