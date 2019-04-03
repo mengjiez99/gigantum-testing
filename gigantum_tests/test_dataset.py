@@ -36,7 +36,7 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     # clean up datasets local and remote
     logging.info("Removing project from cloud")
     driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
-    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title)
+    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title_local)
     time.sleep(2)
     driver.find_element_by_css_selector(".ButtonLoader").click()
     time.sleep(2)
