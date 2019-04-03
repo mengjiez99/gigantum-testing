@@ -30,7 +30,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     # python 3 minimal base
     testutils.add_py3_min_base(driver)
     # wait
-    wait = WebDriverWait(driver, 200)
+    wait = WebDriverWait(driver, 100)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex > .Stopped")))
     # pip packages
     testutils.add_pip_package(driver)
@@ -54,12 +54,15 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     window_handles = driver.window_handles
     driver.switch_to.window(window_handles[1])
     logging.info("Switching to jupyter lab")
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "[title = code]")))
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[title = code]")))
+    #time.sleep(5)
     driver.find_element_by_css_selector(".jp-LauncherCard-label").click()
     logging.info("Launching jupyter notebook")
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".CodeMirror-line")))
+    #wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".CodeMirror-line")))
+    time.sleep(5)
     el = driver.find_element_by_css_selector(".CodeMirror-line")
     actions = ActionChains(driver)
+    logging.info("Importing packages")
     # implement script the import packages and print the versions.
     package_script = "import pandas\nimport numpy\nimport matplotlib\n" \
                      "print('pandas', pandas.__version__," \
@@ -68,13 +71,17 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     actions.move_to_element(el).click(el).send_keys(package_script).perform()
     driver.find_element_by_css_selector(".jp-RunIcon").click()
     # extract the output of package versions as string and parse to a list.
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".jp-mod-active")))
+    logging.info("Extracting package versions from jupyter")
+    #wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".jp-mod-active")))
+    time.sleep(3)
     package_output = driver.find_element_by_css_selector(".jp-OutputArea-output > pre").text.split(" ")
     # convert to dictionary with package names as key and versions as values.
     package_jupyter = dict(zip(package_output[::2], package_output[1::2]))
     logging.info("Getting package versions from jupyterlab")
     # check if package versions from environment and from jupyter notebook are same.
+    print(package_environment, package_jupyter)
     assert package_environment == package_jupyter, "Package versions do not match"
+
 
     '''
     # stop the container after the test is finished
@@ -97,7 +104,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     assert driver.find_element_by_css_selector(".flex>.Stopped").is_displayed(), "Expected stopped container"
     '''
 
-
+'''
 def test_valid_custom_docker(driver: selenium.webdriver, *args, **kwargs):
     """
     Test valid custom Docker instructions.
@@ -151,3 +158,4 @@ def test_invalid_custom_docker(driver: selenium.webdriver, *args, **kwargs):
     # assert container status is stopped and 'Successfully tagged' is in footer
     assert driver.find_element_by_css_selector(".flex>.Rebuild").is_displayed(), "Expected rebuild container status"
     assert "Project failed to build" in driver.find_element_by_css_selector(".Footer__message-title").text, "Expected 'Project failed to build' in footer"
+'''
