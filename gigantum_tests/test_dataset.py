@@ -56,11 +56,11 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     driver.find_element_by_css_selector(".LocalDatasets__panel-title").click()
     driver.find_element_by_css_selector(".ActionsMenu__btn").click()
     driver.find_element_by_css_selector(".ActionsMenu__item--delete").click()
-    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title)
+    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title_local)
     time.sleep(2)
     driver.find_element_by_css_selector(".ButtonLoader").click()
     time.sleep(2)
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteDataset")))
     dataset_local = driver.find_element_by_css_selector(".LocalDatasets__panel-title:first-child span span").text
 
-    assert dataset_in_local != dataset_local, "Expected dataset deleted in local tab"
+    assert dataset_title_local != dataset_local, "Expected dataset deleted in local tab"
