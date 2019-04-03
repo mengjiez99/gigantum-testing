@@ -4,6 +4,9 @@ import time
 
 # Library imports
 import selenium
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Local packages
 from testutils import elements
@@ -282,6 +285,8 @@ def create_dataset(driver: selenium.webdriver) -> str:
     dataset_elts.dataset_continue_button.click()
     dataset_elts.gigantum_cloud_button.click()
     dataset_elts.create_dataset_button.click()
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".TitleSection")))
     return unique_dataset_name
 
 
@@ -301,5 +306,8 @@ def publish_dataset(driver: selenium.webdriver):
     dataset_elts.dataset_page_tab.click()
     time.sleep(5)
     dataset_elts.dataset_cloud_page.click()
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".VisibilityModal__buttons")))
+
 
 

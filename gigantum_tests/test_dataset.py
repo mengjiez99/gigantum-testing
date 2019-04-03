@@ -26,9 +26,7 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(2)
     # create and publish datset
     dataset_title = testutils.create_dataset(driver)
-    time.sleep(2)
     testutils.publish_dataset(driver)
-    time.sleep(5)
     # check published dataset in the cloud
     dataset_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
     assert dataset_title in dataset_cloud, "Expected dataset to be in cloud tab"
@@ -60,6 +58,3 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteDataset")))
     dataset_local = driver.find_element_by_css_selector(".LocalDatasets__panel-title:first-child span span").text
     assert dataset_title not in dataset_local, "Expected dataset deleted in local tab"
-
-
-
