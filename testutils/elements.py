@@ -268,6 +268,22 @@ class PublishProjectElements(UiElement):
     def delete_confirm_button(self):
         return self.driver.find_element_by_css_selector(".ButtonLoader")
 
+    @property
+    def publish_continue_button(self):
+        return self.driver.find_element_by_xpath("//button[contains(text(), 'Continue')]")
+
+    @property
+    def publish_private_project_button(self):
+        return self.driver.find_element_by_xpath("//label[@for='project_private']")
+
+    @property
+    def publish_private_dataset_button(self):
+        return self.driver.find_element_by_xpath("//label[@class='PublishDatasetsModal__private-label']")
+
+    @property
+    def publish_all_button(self):
+        return self.driver.find_element_by_xpath("//button[contains(text(), 'Publish All')]")
+
 
 class InputDataElements(UiElement):
     @property
