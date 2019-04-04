@@ -30,7 +30,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     # python 3 minimal base
     testutils.add_py3_min_base(driver)
     # wait
-    wait = WebDriverWait(driver, 100)
+    wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex > .Stopped")))
     # pip packages
     testutils.add_pip_package(driver)
