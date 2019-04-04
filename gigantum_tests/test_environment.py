@@ -79,7 +79,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     package_jupyter = dict(zip(package_output[::2], package_output[1::2]))
     logging.info("Getting package versions from jupyterlab")
     # check if package versions from environment and from jupyter notebook are same.
-    logging.info(f"package_environment {package_environment} \n package_jupyter {package_jupyter})
+    logging.info(f"package_environment {package_environment} \n package_jupyter {package_jupyter}")
     assert package_environment == package_jupyter, "Package versions do not match"
 
 
