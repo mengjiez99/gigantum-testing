@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # Local packages
 import testutils
 
-
+'''
 def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     """
     Test that published dataset is linked to a project and the project is published successfully.
@@ -126,7 +126,7 @@ def test_unpublished_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
     assert dataset_title_local != dataset_title_cloud, "Expected dataset no longer the first one in cloud tab"
-
+'''
 
 def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs):
     """
@@ -159,19 +159,24 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
     # Publish the project itself
     testutils.publish_project(driver)
+
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
     assert project_title_local == project_title_cloud, "Expected project to be the first project in the cloud tab"
 
     # Link the dataset and sync
+    driver.find_element_by_xpath("//a[contains(text(), 'Projects')]").click()
+    time.sleep(3)
+    driver.find_element_by_css_selector(".LocalLabbooks__panel-title").click()
+    time.sleep(3)
     testutils.link_dataset(driver)
     linked_dataset_title = driver.find_element_by_css_selector(".DatasetBrowser__name").text
     assert linked_dataset_title == dataset_title_local, "Expected dataset linked to project"
+    logging.info("Syncing the project")
     driver.find_element_by_css_selector(".BranchMenu__btn--sync--upToDate").click()
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
 
     # Delete project from cloud
     testutils.delete_project_cloud(driver, project_title_local)
-
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
     assert project_title_cloud != project_title_local, "Expected project no longer the first one in cloud tab"
 
