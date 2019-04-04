@@ -397,6 +397,3 @@ def delete_project_cloud(driver: selenium.webdriver, project):
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteLabbook")))
 
 
-
-
-
