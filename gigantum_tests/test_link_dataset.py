@@ -14,7 +14,9 @@ import testutils
 
 def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     """
-    Test that published dataset is linked to a project and the project is published successfully.
+    1. create and publish a dataset
+    2. create a project and link the dataset
+    3. publish the project
 
     Args:
         driver
@@ -68,7 +70,9 @@ def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
 
 def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs):
     """
-    Test that published dataset is linked to a project and the project is published successfully.
+    1. create and publish a dataset
+    2. create a project and publish the project
+    3. link the dataset and sync
 
     Args:
         driver
@@ -127,7 +131,9 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
 
 def test_unpublished_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     """
-    Test that unpublished dataset is linked to a project and the project is published successfully.
+    1. create a dataset, don't publish
+    2. create a project and link the dataset
+    3. publish the project (dataset is published along with project)
 
     Args:
         driver
