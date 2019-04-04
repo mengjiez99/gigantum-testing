@@ -363,6 +363,7 @@ def delete_dataset_cloud(driver: selenium.webdriver, dataset):
     logging.info(f"Removing dataset {dataset} from cloud")
     driver.find_element_by_xpath("//a[contains(text(), 'Datasets')]").click()
     driver.find_element_by_css_selector(".Datasets__nav-item--cloud").click()
+    time.sleep(2)
     driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
     driver.find_element_by_css_selector("#deleteInput").send_keys(dataset)
     time.sleep(2)
@@ -382,9 +383,10 @@ def delete_project_cloud(driver: selenium.webdriver, project):
 
     """
     logging.info(f"Removing project {project} from cloud")
-    driver.find_element_by_xpath("//a[contains(text(), 'Projects')]").click()
-    driver.find_element_by_css_selector(".Labbooks__nav-item--cloud").click()
     publish_elts = elements.PublishProjectElements(driver)
+    publish_elts.project_page_tab.click()
+    publish_elts.cloud_tab.click()
+    time.sleep(2)
     publish_elts.delete_project_button.click()
     time.sleep(2)
     publish_elts.delete_project_input.send_keys(project)
