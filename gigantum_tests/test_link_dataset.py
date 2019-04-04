@@ -26,26 +26,42 @@ def test_link_dataset(driver: selenium.webdriver, *args, **kwargs):
     testutils.remove_guide(driver)
     time.sleep(2)
     # create and publish datset
-    testutils.create_dataset(driver)
+    dataset_title = testutils.create_dataset(driver)
 
     # Project set up
     driver.find_element_by_css_selector(".SideBar__nav-item--labbooks").click()
-    testutils.create_project_without_base(driver)
+    project_title = testutils.create_project_without_base(driver)
     # Python 3 minimal base
     testutils.add_py3_min_base(driver)
     wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
 
-    # Link the dataset and publish project
+    # Link the dataset
     logging.info("Linking the dataset to project")
     driver.find_element_by_css_selector(".Navigation__list-item--inputData").click()
     driver.find_element_by_css_selector(".FileBrowser__button--add-dataset").click()
     driver.find_element_by_css_selector(".LinkCard__details").click()
-    time.sleep(2)
-    wait.until(EC.text_to_be_present_in_element(By.XPATH("//button[contains(text(), 'Link Dataset')]")))
-    logging.info("Confirming linking")
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".Footer__message-title")))
     driver.find_element_by_css_selector(".ButtonLoader ").click()
-    time.sleep(5)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".DatasetBrowser__row")))
-    driver.find_element_by_css_selector(".BranchMenu__btn--sync--publish").click()
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".LinkModal__container")))
+    linked_dataset_title = driver.find_element_by_css_selector(".DatasetBrowser__name").text
 
+    assert linked_dataset_title == dataset_title, "Expected dataset linked to project"
+
+    # Publish the project with dataset linked
+    logging.info("Publishing project")
+    publish_elts = testutils.PublishProjectElements(driver)
+    publish_elts.publish_project_button.click()
+    publish_elts.publish_confirm_button.click()
+    time.sleep(5)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
+    time.sleep(5)
+    side_bar_elts = testutils.SideBarElements(driver)
+    side_bar_elts.projects_icon.click()
+    publish_elts.cloud_tab.click()
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
+
+    cloud_tab_first_project_title_publish = driver.find_element_by_css_selector(
+        ".RemoteLabbooks__panel-title:first-child span span").text
+    assert cloud_tab_first_project_title_publish == project_title, \
+        "Expected project to be the first project in the cloud tab"
