@@ -243,6 +243,7 @@ class PublishProjectElements(UiElement):
     def publish_confirm_button(self):
         return self.driver.find_element_by_css_selector(".VisibilityModal__buttons>button")
 
+
     @property
     def cloud_tab(self):
         return self.driver.find_element_by_css_selector(".Labbooks__nav-item--cloud")

@@ -33,7 +33,7 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
     assert dataset_title_local == dataset_title_cloud, "Expected dataset to be the first one in cloud tab"
 
     # clean up datasets local and remote
-    logging.info("Removing project from cloud")
+    logging.info("Removing dataset from cloud")
     driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
     driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title_local)
     time.sleep(2)
@@ -45,7 +45,7 @@ def test_dataset(driver: selenium.webdriver, *args, **kwargs):
 
     assert dataset_title_local != dataset_title_cloud, "Expected dataset no longer the first one in cloud tab"
 
-    logging.info("Removing project from local")
+    logging.info("Removing dataset from local")
     driver.find_element_by_css_selector(".Datasets__nav-item--local").click()
     time.sleep(2)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".LocalDatasets__row--icons")))
