@@ -310,4 +310,89 @@ def publish_dataset(driver: selenium.webdriver):
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".VisibilityModal__buttons")))
 
 
+def link_dataset(driver: selenium.webdriver):
+    """
+    Link a dataset to a project.
+
+    Args:
+        driver
+
+    """
+    # Link the dataset
+    logging.info("Linking the dataset to project")
+    driver.find_element_by_css_selector(".Navigation__list-item--inputData").click()
+    driver.find_element_by_css_selector(".FileBrowser__button--add-dataset").click()
+    driver.find_element_by_css_selector(".LinkCard__details").click()
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".Footer__message-title")))
+    driver.find_element_by_css_selector(".ButtonLoader ").click()
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".LinkModal__container")))
+
+
+def publish_project(driver: selenium.webdriver):
+    """
+        Publish a project to cloud.
+
+        Args:
+            driver
+
+        """
+    logging.info("Publishing project")
+    publish_elts = elements.PublishProjectElements(driver)
+    publish_elts.publish_project_button.click()
+    publish_elts.publish_confirm_button.click()
+    time.sleep(5)
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
+    time.sleep(5)
+    side_bar_elts = elements.SideBarElements(driver)
+    side_bar_elts.projects_icon.click()
+    publish_elts.cloud_tab.click()
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
+
+
+def delete_dataset_cloud(driver: selenium.webdriver, dataset_title_cloud):
+    """
+    Delete a dataset from cloud.
+
+    Args:
+        driver
+        dataset_title_cloud
+
+    """
+    logging.info("Removing dataset from cloud")
+    driver.find_element_by_xpath("//a[contains(text(), 'Datasets')]").click()
+    driver.find_element_by_css_selector(".Datasets__nav-item--cloud").click()
+    driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
+    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title_cloud)
+    time.sleep(2)
+    driver.find_element_by_css_selector(".ButtonLoader").click()
+    time.sleep(2)
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteDataset")))
+
+
+def delete_project_cloud(driver: selenium.webdriver, project_title_cloud):
+    """
+    Delete a project from cloud.
+
+    Args:
+        driver
+        project_title_cloud
+
+    """
+    logging.info("Removing project from cloud")
+    publish_elts = elements.PublishProjectElements(driver)
+    publish_elts.delete_project_button.click()
+    time.sleep(2)
+    publish_elts.delete_project_input.send_keys(project_title_cloud)
+    time.sleep(2)
+    publish_elts.delete_confirm_button.click()
+    time.sleep(5)
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteLabbook")))
+
+
+
+
 

@@ -12,9 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 import testutils
 
 
-def test_link_dataset(driver: selenium.webdriver, *args, **kwargs):
+def test_publish_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     """
-    Test that dataset is linked to a project and the project is published successfully.
+    Test that published dataset is linked to a project and the project is published successfully.
 
     Args:
         driver
@@ -36,67 +36,31 @@ def test_link_dataset(driver: selenium.webdriver, *args, **kwargs):
 
     # Project set up
     driver.find_element_by_css_selector(".SideBar__nav-item--labbooks").click()
-    project_title = testutils.create_project_without_base(driver)
+    project_title_local = testutils.create_project_without_base(driver)
     # Python 3 minimal base
     testutils.add_py3_min_base(driver)
     wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
 
     # Link the dataset
-    logging.info("Linking the dataset to project")
-    driver.find_element_by_css_selector(".Navigation__list-item--inputData").click()
-    driver.find_element_by_css_selector(".FileBrowser__button--add-dataset").click()
-    driver.find_element_by_css_selector(".LinkCard__details").click()
-    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".Footer__message-title")))
-    driver.find_element_by_css_selector(".ButtonLoader ").click()
-    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".LinkModal__container")))
+    testutils.link_dataset(driver)
     linked_dataset_title = driver.find_element_by_css_selector(".DatasetBrowser__name").text
 
     assert linked_dataset_title == dataset_title_local, "Expected dataset linked to project"
 
     # Publish the project with dataset linked
-    logging.info("Publishing project")
-    publish_elts = testutils.PublishProjectElements(driver)
-    publish_elts.publish_project_button.click()
-    time.sleep(10)
-    publish_elts.publish_confirm_button.click()
-    time.sleep(5)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
-    time.sleep(5)
-    side_bar_elts = testutils.SideBarElements(driver)
-    side_bar_elts.projects_icon.click()
-    publish_elts.cloud_tab.click()
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
+    testutils.publish_project(driver)
+    project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
+    assert project_title_local == project_title_cloud, "Expected project to be the first project in the cloud tab"
 
-    cloud_tab_first_project_title_publish = driver.find_element_by_css_selector(
-        ".RemoteLabbooks__panel-title:first-child span span").text
-    assert cloud_tab_first_project_title_publish == project_title, \
-        "Expected project to be the first project in the cloud tab"
+    # Delete project from cloud
+    testutils.delete_project_cloud(driver, project_title_cloud)
 
-    # Delete dataset and project from cloud
-    logging.info("Removing project from cloud")
-    publish_elts.delete_project_button.click()
-    time.sleep(2)
-    publish_elts.delete_project_input.send_keys(project_title)
-    time.sleep(2)
-    publish_elts.delete_confirm_button.click()
-    time.sleep(5)
+    project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
+    assert project_title_cloud != project_title_local, "Expected project no longer the first one in cloud tab"
 
-    cloud_tab_first_project_title_delete = driver.find_element_by_css_selector(
-        ".RemoteLabbooks__panel-title:first-child span span").text
-    assert cloud_tab_first_project_title_delete != project_title, \
-        "Expected project to not be the first project in the cloud tab"
-
-    logging.info("Removing dataset from cloud")
-    driver.find_element_by_xpath("//a[contains(text(), 'Datasets')]").click()
-    driver.find_element_by_css_selector(".Datasets__nav-item--cloud").click()
-    driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
-    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title_local)
-    time.sleep(2)
-    driver.find_element_by_css_selector(".ButtonLoader").click()
-    time.sleep(2)
-    wait = WebDriverWait(driver, 200)
-    wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteDataset")))
+    # Delete dataset from cloud
+    testutils.delete_dataset_cloud(driver, dataset_title_cloud)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
     assert dataset_title_local != dataset_title_cloud, "Expected dataset no longer the first one in cloud tab"
