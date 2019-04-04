@@ -42,7 +42,7 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     # check package versions from environment
     package_info = driver.find_element_by_css_selector(".PackageDependencies__table").text
     # parse the string to a list and extract information of package names and versions
-    package_list = package_info.split("\n")[1::2]
+    package_list = package_info.split("\n")[1::3]
     package_parse = [x.split(" ") for x in package_list]
     # convert to dictionary with package names as key and versions as values
     package_environment = {x[0]: x[1] for x in package_parse if len(x) > 1}
@@ -54,12 +54,12 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     window_handles = driver.window_handles
     driver.switch_to.window(window_handles[1])
     logging.info("Switching to jupyter lab")
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[title = code]")))
-    #time.sleep(5)
+    #wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[title = code]")))
+    time.sleep(3)
     driver.find_element_by_css_selector(".jp-LauncherCard-label").click()
     logging.info("Launching jupyter notebook")
     #wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".CodeMirror-line")))
-    time.sleep(5)
+    time.sleep(3)
     el = driver.find_element_by_css_selector(".CodeMirror-line")
     actions = ActionChains(driver)
     logging.info("Importing packages")
@@ -104,7 +104,6 @@ def test_pip_packages(driver: selenium.webdriver, *args, **kwargs):
     assert driver.find_element_by_css_selector(".flex>.Stopped").is_displayed(), "Expected stopped container"
     '''
 
-'''
 def test_valid_custom_docker(driver: selenium.webdriver, *args, **kwargs):
     """
     Test valid custom Docker instructions.
@@ -158,4 +157,4 @@ def test_invalid_custom_docker(driver: selenium.webdriver, *args, **kwargs):
     # assert container status is stopped and 'Successfully tagged' is in footer
     assert driver.find_element_by_css_selector(".flex>.Rebuild").is_displayed(), "Expected rebuild container status"
     assert "Project failed to build" in driver.find_element_by_css_selector(".Footer__message-title").text, "Expected 'Project failed to build' in footer"
-'''
+
