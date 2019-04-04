@@ -34,7 +34,8 @@ def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(3)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
-    assert dataset_title_local == dataset_title_cloud, "Expected dataset to be the first one in cloud tab"
+    assert dataset_title_local == dataset_title_cloud, \
+        f"Expected dataset {dataset_title_local} be the first one in cloud tab"
 
     # Project set up
     driver.find_element_by_css_selector(".SideBar__nav-item--labbooks").click()
@@ -48,24 +49,28 @@ def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     testutils.link_dataset(driver)
     linked_dataset_title = driver.find_element_by_css_selector(".DatasetBrowser__name").text
 
-    assert linked_dataset_title == dataset_title_local, "Expected dataset linked to project"
+    assert linked_dataset_title == dataset_title_local, \
+        f"Expected dataset {dataset_title_local} linked to project"
 
     # Publish the project with dataset linked
     testutils.publish_project(driver)
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
-    assert project_title_local == project_title_cloud, "Expected project to be the first project in the cloud tab"
+    assert project_title_local == project_title_cloud, \
+        f"Expected project {project_title_local} to be the first project in the cloud tab"
 
     # Delete project from cloud
     testutils.delete_project_cloud(driver, project_title_local)
 
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
-    assert project_title_cloud != project_title_local, "Expected project no longer the first one in cloud tab"
+    assert project_title_cloud != project_title_local, \
+        f"Expected project {project_title_local} no longer the first one in cloud tab"
 
     # Delete dataset from cloud
     testutils.delete_dataset_cloud(driver, dataset_title_local)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
-    assert dataset_title_local != dataset_title_cloud, "Expected dataset no longer the first one in cloud tab"
+    assert dataset_title_local != dataset_title_cloud, \
+        f"Expected dataset {dataset_title_local} longer the first one in cloud tab"
 
 
 def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs):
@@ -90,7 +95,8 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     time.sleep(3)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
-    assert dataset_title_local == dataset_title_cloud, "Expected dataset to be the first one in cloud tab"
+    assert dataset_title_local == dataset_title_cloud, \
+        f"Expected dataset {dataset_title_local} be the first one in cloud tab"
 
     # Project set up
     driver.find_element_by_css_selector(".SideBar__nav-item--labbooks").click()
@@ -103,7 +109,8 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     testutils.publish_project(driver)
 
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
-    assert project_title_local == project_title_cloud, "Expected project to be the first project in the cloud tab"
+    assert project_title_local == project_title_cloud, \
+        f"Expected project {project_title_local} to be the first project in the cloud tab"
 
     # Link the dataset and sync
     driver.find_element_by_xpath("//a[contains(text(), 'Projects')]").click()
@@ -112,7 +119,8 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     time.sleep(3)
     testutils.link_dataset(driver)
     linked_dataset_title = driver.find_element_by_css_selector(".DatasetBrowser__name").text
-    assert linked_dataset_title == dataset_title_local, "Expected dataset linked to project"
+    assert linked_dataset_title == dataset_title_local, \
+        f"Expected dataset {dataset_title_local} linked to project"
     logging.info("Syncing the project")
     driver.find_element_by_css_selector(".BranchMenu__btn--sync--upToDate").click()
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
@@ -126,7 +134,8 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     testutils.delete_dataset_cloud(driver, dataset_title_local)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
-    assert dataset_title_local != dataset_title_cloud, "Expected dataset no longer the first one in cloud tab"
+    assert dataset_title_local != dataset_title_cloud, \
+        f"Expected dataset {dataset_title_local} no longer the first one in cloud tab"
 
 
 def test_unpublished_dataset_link(driver: selenium.webdriver, *args, **kwargs):
@@ -159,7 +168,8 @@ def test_unpublished_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     testutils.link_dataset(driver)
     linked_dataset_title = driver.find_element_by_css_selector(".DatasetBrowser__name").text
 
-    assert linked_dataset_title == dataset_title_local, "Expected dataset linked to project"
+    assert linked_dataset_title == dataset_title_local, \
+        f"Expected dataset {dataset_title_local} linked to project"
 
     # Publish the project with dataset linked
     logging.info("Publishing project with local dataset")
@@ -179,18 +189,21 @@ def test_unpublished_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
 
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
-    assert project_title_local == project_title_cloud, "Expected project to be the first project in the cloud tab"
+    assert project_title_local == project_title_cloud, \
+        f"Expected project {project_title_local} to be the first project in the cloud tab"
 
     # Delete project from cloud
     testutils.delete_project_cloud(driver, project_title_local)
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
-    assert project_title_cloud != project_title_local, "Expected project no longer the first one in cloud tab"
+    assert project_title_cloud != project_title_local, \
+        f"Expected project {project_title_local} no longer the first one in cloud tab"
 
     # Delete dataset from cloud
     testutils.delete_dataset_cloud(driver, dataset_title_local)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
 
-    assert dataset_title_local != dataset_title_cloud, "Expected dataset no longer the first one in cloud tab"
+    assert dataset_title_local != dataset_title_cloud, \
+        f"Expected dataset {dataset_title_local} no longer the first one in cloud tab"
 
 
 
