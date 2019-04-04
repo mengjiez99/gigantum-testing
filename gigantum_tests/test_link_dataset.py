@@ -65,3 +65,6 @@ def test_link_dataset(driver: selenium.webdriver, *args, **kwargs):
         ".RemoteLabbooks__panel-title:first-child span span").text
     assert cloud_tab_first_project_title_publish == project_title, \
         "Expected project to be the first project in the cloud tab"
+
+    # Delete project from cloud
+
