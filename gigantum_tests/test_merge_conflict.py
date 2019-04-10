@@ -44,8 +44,8 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
     logging.info(f"Adding a collaborator with Admin permission to private project {project_title}")
     publish_elts.collaborators_button.click()
     time.sleep(2)
-    username = testutils.load_credentials(user_index=0)
     username2 = testutils.load_credentials(user_index=1)
+    print(username, username2)
     publish_elts.collaborators_input.send_keys(username2)
     publish_elts.select_permission_button.click()
     publish_elts.select_admin_button.click()
@@ -55,7 +55,7 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
     testutils.log_out(driver)
 
     # Add file to input data and sync project
-    logging.info("Adding a file to the project")
+    logging.info("Owner adding a file to the project")
     with open('/tmp/sample-upload.txt', 'w') as example_file:
         example_file.write('{username}')
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
@@ -126,23 +126,6 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
         file_content = example_file.read()
 
     assert file_content == username, "The file content is expected to match the owner's username"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     # Owner deletes cloud project
