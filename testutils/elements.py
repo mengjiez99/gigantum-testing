@@ -273,7 +273,7 @@ class PublishProjectElements(UiElement):
 
     @property
     def sync_project_button(self):
-        return self.driver.find_element_by_css_selector(".BranchMenu__btn--sync")
+        return self.driver.find_element_by_css_selector(".BranchMenu__btn--sync--upToDate")
 
     @property
     def delete_project_button(self):
