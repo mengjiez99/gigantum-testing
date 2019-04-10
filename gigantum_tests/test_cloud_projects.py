@@ -15,9 +15,9 @@ from selenium.webdriver.support import expected_conditions as EC
 import testutils
 
 
-def test_merge_conflict(driver: selenium.webdriver, *args, **kwargs):
+def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs):
     """
-        Test that merge conflict is handled correctly in project.
+        Test that a project in Gigantum can be published, synced, and deleted.
 
         Args:
             driver
