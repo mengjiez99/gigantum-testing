@@ -288,7 +288,6 @@ class PublishProjectElements(UiElement):
         return self.driver.find_element_by_css_selector(".ButtonLoader")
 
     @property
-
     def publish_continue_button(self):
         return self.driver.find_element_by_xpath("//button[contains(text(), 'Continue')]")
 
@@ -304,8 +303,17 @@ class PublishProjectElements(UiElement):
     def publish_all_button(self):
         return self.driver.find_element_by_xpath("//button[contains(text(), 'Publish All')]")
 
+    @property
     def collaborators_button(self):
         return self.driver.find_element_by_css_selector(".Collaborators__btn")
+
+    @property
+    def select_permission_button(self):
+        return self.driver.find_element_by_css_selector(".CollaboratorsModal__permissions")
+
+    @property
+    def select_admin_button(self):
+        return self.driver.find_element_by_xpath("//div[contains(text(), 'Admin')]")
 
     @property
     def collaborators_input(self):
