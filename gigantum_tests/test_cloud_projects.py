@@ -17,7 +17,7 @@ import testutils
 
 def test_merge_conflict(driver: selenium.webdriver, *args, **kwargs):
     """
-        Test that a project in Gigantum can be published, synced, and deleted.
+        Test that merge conflict is handled correctly in project.
 
         Args:
             driver
