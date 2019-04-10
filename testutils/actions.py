@@ -339,7 +339,7 @@ def link_dataset(driver: selenium.webdriver):
 
 def publish_project(driver: selenium.webdriver):
     """
-        Publish a project to cloud and navigate to the cloud.
+        Publish a project to cloud.
 
         Args:
             driver

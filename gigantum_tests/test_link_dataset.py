@@ -54,6 +54,12 @@ def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
 
     # Publish the project with dataset linked
     testutils.publish_project(driver)
+    time.sleep(5)
+    side_bar_elts = testutils.SideBarElements(driver)
+    side_bar_elts.projects_icon.click()
+    testutils.PublishProjectElements.cloud_tab.click()
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
+
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
     assert project_title_local == project_title_cloud, \
         f"Expected project {project_title_local} to be the first project in the cloud tab"
@@ -91,6 +97,7 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     # create and publish datset
     dataset_title_local = testutils.create_dataset(driver)
     testutils.publish_dataset(driver)
+
     # check published dataset in the cloud
     time.sleep(3)
     dataset_title_cloud = driver.find_element_by_css_selector(".RemoteDatasets__panel-title:first-child span span").text
@@ -107,6 +114,11 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
     # Publish the project itself
     testutils.publish_project(driver)
+    time.sleep(5)
+    side_bar_elts = testutils.SideBarElements(driver)
+    side_bar_elts.projects_icon.click()
+    testutils.PublishProjectElements.cloud_tab.click()
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
 
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
     assert project_title_local == project_title_cloud, \
