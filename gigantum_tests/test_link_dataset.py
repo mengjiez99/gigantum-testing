@@ -55,9 +55,9 @@ def test_published_dataset_link(driver: selenium.webdriver, *args, **kwargs):
     # Publish the project with dataset linked
     testutils.publish_project(driver)
     time.sleep(5)
-    side_bar_elts = testutils.SideBarElements(driver)
-    side_bar_elts.projects_icon.click()
-    testutils.PublishProjectElements.cloud_tab.click()
+    publish_elts = testutils.PublishProjectElements(driver)
+    publish_elts.project_page_tab.click()
+    publish_elts.cloud_tab.click()
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
 
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text
@@ -115,9 +115,9 @@ def test_published_dataset_link_sync(driver: selenium.webdriver, *args, **kwargs
     # Publish the project itself
     testutils.publish_project(driver)
     time.sleep(5)
-    side_bar_elts = testutils.SideBarElements(driver)
-    side_bar_elts.projects_icon.click()
-    testutils.PublishProjectElements.cloud_tab.click()
+    publish_elts = testutils.PublishProjectElements(driver)
+    publish_elts.project_page_tab.click()
+    publish_elts.cloud_tab.click()
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
 
     project_title_cloud = driver.find_element_by_css_selector(".RemoteLabbooks__panel-title:first-child span span").text

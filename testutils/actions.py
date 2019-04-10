@@ -352,11 +352,6 @@ def publish_project(driver: selenium.webdriver):
     time.sleep(5)
     wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
-    time.sleep(5)
-    side_bar_elts = elements.SideBarElements(driver)
-    side_bar_elts.projects_icon.click()
-    publish_elts.cloud_tab.click()
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
 
 
 def delete_dataset_cloud(driver: selenium.webdriver, dataset_title):
