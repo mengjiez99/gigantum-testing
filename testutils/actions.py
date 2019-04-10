@@ -300,7 +300,7 @@ def create_dataset(driver: selenium.webdriver) -> str:
 
 def publish_dataset(driver: selenium.webdriver):
     """
-    Publish a dataset to cloud.
+    Publish a dataset to cloud and navigate to the cloud.
 
     Args:
         driver
@@ -333,12 +333,13 @@ def link_dataset(driver: selenium.webdriver):
     wait = WebDriverWait(driver, 200)
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".Footer__message-title")))
     driver.find_element_by_css_selector(".ButtonLoader ").click()
+    # wait the linking window to disappear
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".LinkModal__container")))
 
 
 def publish_project(driver: selenium.webdriver):
     """
-        Publish a project to cloud.
+        Publish a project to cloud and navigate to the cloud.
 
         Args:
             driver
