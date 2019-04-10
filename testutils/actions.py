@@ -15,22 +15,30 @@ from testutils import testutils
 
 
 # create project
-def log_in(driver: selenium.webdriver) -> str:
+def log_in(driver: selenium.webdriver, user_index: int = 0) -> str:
     """
     Log in to Gigantum.
 
     Args:
         driver
+        user_index: an offset into credentials.txt
 
     Returns:
         Username of user just logged in
     """
     driver.get("http://localhost:10000/projects/local#")
-    logging.info("Logging in")
     auth0_elts = elements.Auth0LoginElements(driver)
     auth0_elts.login_green_button.click()
     time.sleep(2)
-    username,password = testutils.load_credentials()
+    try:
+        if auth0_elts.auth0_lock_button:
+            logging.info("Clicking 'Not your account?'")
+            auth0_elts.not_your_account_button.click()
+    except:
+        pass
+    time.sleep(2)
+    username, password = testutils.load_credentials(user_index=user_index)
+    logging.info(f"Logging in as {username}")
     auth0_elts.username_input.click()
     auth0_elts.username_input.send_keys(username)
     auth0_elts.password_input.click()
@@ -296,7 +304,6 @@ def publish_dataset(driver: selenium.webdriver):
 
     Args:
         driver
-
     """
     logging.info("Publish dataset to cloud")
     dataset_elts = elements.AddDatasetElements(driver)
@@ -351,7 +358,7 @@ def publish_project(driver: selenium.webdriver):
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
 
 
-def delete_dataset_cloud(driver: selenium.webdriver, dataset):
+def delete_dataset_cloud(driver: selenium.webdriver, dataset_title):
     """
     Delete a dataset from cloud.
 
@@ -360,12 +367,12 @@ def delete_dataset_cloud(driver: selenium.webdriver, dataset):
         dataset
 
     """
-    logging.info(f"Removing dataset {dataset} from cloud")
+    logging.info(f"Removing dataset {dataset_title} from cloud")
     driver.find_element_by_xpath("//a[contains(text(), 'Datasets')]").click()
     driver.find_element_by_css_selector(".Datasets__nav-item--cloud").click()
     time.sleep(2)
     driver.find_element_by_css_selector(".RemoteDatasets__icon--delete").click()
-    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset)
+    driver.find_element_by_css_selector("#deleteInput").send_keys(dataset_title)
     time.sleep(2)
     driver.find_element_by_css_selector(".ButtonLoader").click()
     time.sleep(5)
@@ -373,7 +380,7 @@ def delete_dataset_cloud(driver: selenium.webdriver, dataset):
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteDataset")))
 
 
-def delete_project_cloud(driver: selenium.webdriver, project):
+def delete_project_cloud(driver: selenium.webdriver, project_title):
     """
     Delete a project from cloud.
 
@@ -382,18 +389,33 @@ def delete_project_cloud(driver: selenium.webdriver, project):
         project
 
     """
-    logging.info(f"Removing project {project} from cloud")
+    logging.info(f"Removing project {project_title} from cloud")
     publish_elts = elements.PublishProjectElements(driver)
     publish_elts.project_page_tab.click()
     publish_elts.cloud_tab.click()
     time.sleep(2)
     publish_elts.delete_project_button.click()
     time.sleep(2)
-    publish_elts.delete_project_input.send_keys(project)
+    publish_elts.delete_project_input.send_keys(project_title)
     time.sleep(2)
     publish_elts.delete_confirm_button.click()
     time.sleep(5)
     wait = WebDriverWait(driver, 200)
     wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".DeleteLabbook")))
 
+
+def log_out(driver: selenium.webdriver):
+    """
+    Log out of Gigantum.
+
+    Args:
+     driver
+    """
+    logging.info("Logging out")
+    time.sleep(2)
+    side_bar_elts = elements.SideBarElements(driver)
+    side_bar_elts.username_button.click()
+    time.sleep(2)
+    side_bar_elts.logout_button.click()
+    time.sleep(2)
 
