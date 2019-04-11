@@ -14,9 +14,10 @@ from selenium.webdriver.support import expected_conditions as EC
 # Local packages
 import testutils
 
-def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
+
+def project_merge_conflict(driver: selenium.webdriver, *args, **kwargs):
     """
-        Test that merge conflict is handled correctly.
+        Generate merge conflict by two users uploading files with same file name but different content.
 
         Args:
             driver
@@ -55,7 +56,7 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
 
     # Owner add file to input data, not sync
     logging.info("Owner adding a file to the project")
-    with open('/tmp/sample-upload.txt', 'w') as example_file:
+    with open('/tmp/sample.txt', 'w') as example_file:
         example_file.write(f'{username}')
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
@@ -83,7 +84,7 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
 
     # Collaborator added a file using same name with different content
     logging.info("Collaborator adding a file to the project")
-    with open('/tmp/sample-upload.txt', 'w') as example_file:
+    with open('/tmp/sample.txt', 'w') as example_file:
         example_file.write(f'{username2}')
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username2, username, 'labbooks', project_title,
                               'input')
@@ -109,25 +110,70 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(2)
     driver.find_element_by_css_selector(f"a[href='/projects/{username}/{project_title}']").click()
     time.sleep(5)
+    logging.info(f"Owner syncing project {project_title} to the cloud")
     publish_elts.sync_project_button.click()
-    time.sleep(10)
+    time.sleep(5)
 
-    # Owner get conflict and solve by using mine.
+    return username, username2, project_title
+
+
+def test_merge_conflict_use_mine(driver: selenium.webdriver, *args, **kwargs):
+    """
+        Test that merge conflict is handled correctly by selecting 'use mine'.
+
+        Args:
+            driver
+    """
+    # generate merge conflict
+    username, username2, project_title = project_merge_conflict(driver)
+
+    # check that merge conflict is generated
     assert driver.find_element_by_css_selector(".ForceSync__buttonContainer").is_displayed(),\
         "Owner expected merge conflict"
+    # solve the merge conflict by using mine
+    logging.info("Solving the merge conflict using mine")
     driver.find_element_by_xpath("//button[contains(text(), 'Use Mine')]").click()
-
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
-
-    file = open(os.path.join(input_path, 'sample-upload.txt'), 'r')
+    file = open(os.path.join(input_path, 'sample.txt'), 'r')
     assert file.read() == username, "The file content is expected to match the owner's username"
 
     # Owner deletes cloud project
-    side_bar_elts = testutils.SideBarElements(driver)
-    side_bar_elts.projects_icon.click()
+    publish_elts = testutils.PublishProjectElements(driver)
+    publish_elts.project_page_tab.click()
     publish_elts.cloud_tab.click()
+    wait = WebDriverWait(driver, 200)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
     testutils.delete_project_cloud(driver, project_title)
 
+
+def test_merge_conflict_use_theirs(driver: selenium.webdriver, *args, **kwargs):
+    """
+        Test that merge conflict is handled correctly by selecting 'use theirs'.
+
+        Args:
+            driver
+    """
+    # generate merge conflict
+    username, username2, project_title = project_merge_conflict(driver)
+
+    # check that merge conflict is generated
+    assert driver.find_element_by_css_selector(".ForceSync__buttonContainer").is_displayed(),\
+        "Owner expected merge conflict"
+
+    # solve the merge conflict by using theirs
+    logging.info("Solving the conflict by using theirs ")
+    driver.find_element_by_xpath("//button[contains(text(), 'Use Theirs')]").click()
+    input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
+                              'input')
+    file = open(os.path.join(input_path, 'sample.txt'), 'r')
+    assert file.read() == username2, "The file content is expected to match the collaborator's username"
+
+    # Owner deletes cloud project
+    publish_elts = testutils.PublishProjectElements(driver)
+    publish_elts.project_page_tab.click()
+    publish_elts.cloud_tab.click()
+    wait = WebDriverWait(driver, 200)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
+    testutils.delete_project_cloud(driver, project_title)
 
