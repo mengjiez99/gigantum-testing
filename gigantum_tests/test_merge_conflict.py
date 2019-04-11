@@ -137,8 +137,9 @@ def test_merge_conflict_use_mine(driver: selenium.webdriver, *args, **kwargs):
     wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".Footer__message-item > p"), "Sync complete"))
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
-    file = open(os.path.join(input_path, 'sample.txt'), 'r')
-    assert file.read() == 'xxx', "The file content is expected to match 'xxx' "
+    conflict_file = open(os.path.join(input_path, 'sample.txt'), 'r')
+    assert conflict_file.read() == 'xxx', "The file content is expected to match 'xxx' "
+    conflict_file.close()
 
     # Owner deletes cloud project
     publish_elts = testutils.PublishProjectElements(driver)
@@ -169,9 +170,9 @@ def test_merge_conflict_use_theirs(driver: selenium.webdriver, *args, **kwargs):
     wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".Footer__message-item > p"), "Sync complete"))
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
-    file = open(os.path.join(input_path, 'sample.txt'), 'r')
-    print(file.read())
-    assert file.read() == 'yyy', "The file content is expected to match 'yyy' "
+    conflict_file = open(os.path.join(input_path, 'sample.txt'), 'r')
+    assert conflict_file.read() == 'yyy', "The file content is expected to match 'yyy' "
+    conflict_file.close()
 
     # Owner deletes cloud project
     publish_elts = testutils.PublishProjectElements(driver)
