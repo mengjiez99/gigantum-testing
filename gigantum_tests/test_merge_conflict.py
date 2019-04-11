@@ -57,7 +57,7 @@ def project_merge_conflict(driver: selenium.webdriver, *args, **kwargs):
     # Owner add file to input data, not sync
     logging.info("Owner adding a file to the project")
     with open('/tmp/sample.txt', 'w') as example_file:
-        example_file.write(f'{username}')
+        example_file.write('xxx')
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
     shutil.copy(example_file.name, input_path)
@@ -85,7 +85,7 @@ def project_merge_conflict(driver: selenium.webdriver, *args, **kwargs):
     # Collaborator added a file using same name with different content
     logging.info("Collaborator adding a file to the project")
     with open('/tmp/sample.txt', 'w') as example_file:
-        example_file.write(f'{username2}')
+        example_file.write('yyy')
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username2, username, 'labbooks', project_title,
                               'input')
     shutil.copy(example_file.name, input_path)
@@ -116,7 +116,7 @@ def project_merge_conflict(driver: selenium.webdriver, *args, **kwargs):
 
     return username, username2, project_title
 
-'''
+
 def test_merge_conflict_use_mine(driver: selenium.webdriver, *args, **kwargs):
     """
         Test that merge conflict is handled correctly by selecting 'use mine'.
@@ -134,11 +134,11 @@ def test_merge_conflict_use_mine(driver: selenium.webdriver, *args, **kwargs):
     logging.info("Solving the merge conflict using mine")
     driver.find_element_by_xpath("//button[contains(text(), 'Use Mine')]").click()
     wait = WebDriverWait(driver, 200)
-    wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".Footer__message-title"), "Sync Complete"))
+    wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".Footer__message-item > p"), "Sync complete"))
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
     file = open(os.path.join(input_path, 'sample.txt'), 'r')
-    assert file.read() == username, "The file content is expected to match the owner's username"
+    assert file.read() == 'xxx', "The file content is expected to match 'xxx' "
 
     # Owner deletes cloud project
     publish_elts = testutils.PublishProjectElements(driver)
@@ -146,7 +146,6 @@ def test_merge_conflict_use_mine(driver: selenium.webdriver, *args, **kwargs):
     publish_elts.cloud_tab.click()
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
     testutils.delete_project_cloud(driver, project_title)
-'''
 
 
 def test_merge_conflict_use_theirs(driver: selenium.webdriver, *args, **kwargs):
@@ -171,9 +170,8 @@ def test_merge_conflict_use_theirs(driver: selenium.webdriver, *args, **kwargs):
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
     file = open(os.path.join(input_path, 'sample.txt'), 'r')
-    print(file.read(), username2)
-    print(file.read() == username2)
-    assert file.read() == username2, "The file content is expected to match the collaborator's username"
+    print(file.read())
+    assert file.read() == 'yyy', "The file content is expected to match 'yyy' "
 
     # Owner deletes cloud project
     publish_elts = testutils.PublishProjectElements(driver)
