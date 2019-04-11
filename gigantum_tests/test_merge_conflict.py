@@ -91,7 +91,7 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
     time.sleep(2)
 
     # Collaborator sync
-    logging.info("Collaborator syncing project {project_title} to the cloud")
+    logging.info(f"Collaborator syncing project {project_title} to the cloud")
     publish_elts.sync_project_button.click()
     time.sleep(2)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
@@ -110,7 +110,7 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
     driver.find_element_by_css_selector(f"a[href='/projects/{username}/{project_title}']").click()
     time.sleep(5)
     publish_elts.sync_project_button.click()
-    time.sleep(5)
+    time.sleep(10)
 
     # Owner get conflict and solve by using mine.
     assert driver.find_element_by_css_selector(".ForceSync__buttonContainer").is_displayed(),\
@@ -119,10 +119,9 @@ def test_merge_conflict_project(driver: selenium.webdriver, *args, **kwargs):
 
     input_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username, 'labbooks', project_title,
                               'input')
-    with open(input_path + 'sample-upload.txt', 'r') as example_file:
-        file_content = example_file.read()
 
-    assert file_content == username, "The file content is expected to match the owner's username"
+    file = open(os.path.join(input_path, 'sample-upload.txt'), 'r')
+    assert file.read() == username, "The file content is expected to match the owner's username"
 
     # Owner deletes cloud project
     side_bar_elts = testutils.SideBarElements(driver)
