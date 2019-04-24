@@ -60,15 +60,11 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
                                 'labbooks', project_title)
     git_get_remote_command_1 = Popen(['git', 'remote', 'get-url', 'origin'],
                                      cwd=project_path, stdout=PIPE, stderr=PIPE)
-    git_get_remote_command_2 = Popen(['git', 'remote', 'get-url', 'origin'],
-                                     cwd=project_path, stdout=PIPE, stderr=PIPE)
     pub_stdout = git_get_remote_command_1.stdout.readline().decode('utf-8').strip()
-    pub_stderr = git_get_remote_command_2.stdout.readline().decode('utf-8').strip()
     assert "https://" in pub_stdout, f"Expected to see a remote set for private project " \
-                                     f"{project_title}, but got {pub_stdout, pub_stderr}"
+                                     f"{project_title}, but got {pub_stdout}"
 
     publish_elts.local_tab.click()
-    #driver.find_element_by_css_selector(f"a[href='/projects/{username}/{project_title}']").click()
     driver.get(f'{os.environ["GIGANTUM_HOST"]}/projects/{username}/{project_title}')
     time.sleep(3)
 
