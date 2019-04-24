@@ -63,6 +63,9 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
                                      f"{project_title}, but got {pub_stdout}"
 
     publish_elts.local_tab.click()
+
+
+
     driver.find_element_by_css_selector(f"a[href='/projects/{username}/{project_title}']").click()
 
     # Add file to input data and sync project
