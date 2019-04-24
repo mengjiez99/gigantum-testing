@@ -29,6 +29,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
     # Publish project, then wait until its rebuilt
     logging.info(f"Publishing private project {project_title}")
     publish_elts = testutils.PublishProjectElements(driver)
+    time.sleep(1)
     publish_elts.publish_project_button.click()
     time.sleep(1)
     publish_elts.publish_confirm_button.click()
@@ -43,6 +44,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
 
     sel = 'div[data-selenium-id="RemoteLabbookPanel"]:first-child'
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, sel)))
+    time.sleep(2)
 
 
     ssel = f'{sel} span'
@@ -58,14 +60,14 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
                                 'labbooks', project_title)
     git_get_remote_command_1 = Popen(['git', 'remote', 'get-url', 'origin'],
                                      cwd=project_path, stdout=PIPE, stderr=PIPE)
+    git_get_remote_command_2 = Popen(['git', 'remote', 'get-url', 'origin'],
+                                     cwd=project_path, stdout=PIPE, stderr=PIPE)
     pub_stdout = git_get_remote_command_1.stdout.readline().decode('utf-8').strip()
+    pub_stderr = git_get_remote_command_2.stdout.readline().decode('utf-8').strip()
     assert "https://" in pub_stdout, f"Expected to see a remote set for private project " \
-                                     f"{project_title}, but got {pub_stdout}"
+                                     f"{project_title}, but got {pub_stdout, pub_stderr}"
 
     publish_elts.local_tab.click()
-
-
-
     driver.find_element_by_css_selector(f"a[href='/projects/{username}/{project_title}']").click()
 
     # Add file to input data and sync project

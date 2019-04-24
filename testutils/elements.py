@@ -256,7 +256,7 @@ class PublishProjectElements(UiElement):
 
     @property
     def local_tab(self):
-        return self.driver.find_element_by_css_selector(".Labbooks__nav-item--local")
+        return self.driver.find_element_by_css_selector(".Tab--local")
 
     @property
     def sync_project_button(self):
