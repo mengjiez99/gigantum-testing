@@ -407,7 +407,7 @@ class PublishProjectElements(UiComponent):
 
     @property
     def add_collaborators_button(self):
-        return self.driver.find_element_by_css_selector(".CollaboratorsModal__btn--add")
+        return self.driver.find_element_by_css_selector(".Btn__plus")
 
     @property
     def close_collaborators_button(self):
