@@ -98,8 +98,14 @@ def log_in(driver: selenium.webdriver, user_index: int = 0) -> str:
     driver.get(f"{os.environ['GIGANTUM_HOST']}/projects/local#")
 
     auth0_elts = elements.Auth0LoginElements(driver)
+    try:
+        if auth0_elts.auth0_lock_button:
+            logging.info("clicking 'Not your account?'")
+            auth0_elts.not_your_account_button.click()
+    except:
+        pass
+    time.sleep(2)
     auth0_elts.do_login(username, password)
-
     time.sleep(5)
     # Set the ID and ACCESS TOKENS -- Used as headers for GraphQL mutations
     access_token = driver.execute_script("return window.localStorage.getItem('access_token')")
