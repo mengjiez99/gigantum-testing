@@ -15,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import testutils
 from testutils import graphql
 
-'''
+
 def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs):
     """
         Test that a project in Gigantum can be published, synced, and deleted.
@@ -82,21 +82,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
     sync_message = driver.find_element_by_css_selector(".Footer__message-item > p").text
     assert "Sync complete" in sync_message, "Expected 'Sync complete' in footer"
 
-    side_bar_elts = testutils.SideBarElements(driver)
-    side_bar_elts.projects_icon.click()
-    time.sleep(1)
-    publish_elts.cloud_tab.click()
-    time.sleep(2)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
-
-    # Delete cloud project
-    logging.info(f"Deleting {project_title} from cloud")
-    publish_elts.delete_project_button.click()
-    time.sleep(2)
-    publish_elts.delete_project_input.send_keys(project_title)
-    time.sleep(2)
-    publish_elts.delete_confirm_button.click()
-    time.sleep(5)
+    testutils.delete_project_cloud(driver, project_title)
 
     # Assert project does not exist remotely (Via GraphQL).
     # TODO - Put back in check for the UI in addition to this check.
@@ -110,7 +96,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
     del_stderr = git_get_remote_command_2.stderr.readline().decode('utf-8').strip()
 
     assert "fatal" in del_stderr, f"Expected to not see a remote set for {project_title}, but got {del_stderr}"
-'''
+
 
 def test_publish_collaborator(driver: selenium.webdriver, *args, ** kwargs):
     """
