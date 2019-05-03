@@ -1,17 +1,14 @@
-# Builtin imports
 import logging
 import time
 import os
 import shutil
 from subprocess import Popen, PIPE
 
-# Library imports
 import selenium
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Local packages
 import testutils
 from testutils import graphql
 
@@ -25,8 +22,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
     """
     r = testutils.prep_py3_minimal_base(driver)
     username, project_title = r.username, r.project_name
-
-    # Publish project, then wait until its rebuilt
+    # Publish project
     logging.info(f"Publishing private project {project_title}")
     publish_elts = testutils.PublishProjectElements(driver)
     publish_elts.publish_project_button.wait().click()
@@ -76,7 +72,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
     shutil.copy(example_file.name, input_path)
     logging.info(f"Syncing {project_title}")
     publish_elts.sync_project_button.click()
-    time.sleep(3)
+    time.sleep(5)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
 
     sync_message = driver.find_element_by_css_selector(".Footer__message-item > p").text

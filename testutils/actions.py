@@ -230,6 +230,7 @@ def delete_project_cloud(driver: selenium.webdriver, project_title):
     logging.info(f"Removing project {project_title} from cloud")
     publish_elts = elements.PublishProjectElements(driver)
     publish_elts.project_page_tab.click()
+    time.sleep(2)
     publish_elts.cloud_tab.click()
     time.sleep(2)
     wait = WebDriverWait(driver, 200)
