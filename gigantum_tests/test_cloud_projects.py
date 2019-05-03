@@ -15,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import testutils
 from testutils import graphql
 
-
+'''
 def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs):
     """
         Test that a project in Gigantum can be published, synced, and deleted.
@@ -110,7 +110,7 @@ def test_publish_sync_delete_project(driver: selenium.webdriver, *args, **kwargs
     del_stderr = git_get_remote_command_2.stderr.readline().decode('utf-8').strip()
 
     assert "fatal" in del_stderr, f"Expected to not see a remote set for {project_title}, but got {del_stderr}"
-
+'''
 
 def test_publish_collaborator(driver: selenium.webdriver, *args, ** kwargs):
     """
@@ -167,38 +167,15 @@ def test_publish_collaborator(driver: selenium.webdriver, *args, ** kwargs):
     time.sleep(2)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex>.Stopped")))
 
-    # Navigate to cloud tab
-    logging.info(f"Navigating to {username2}'s' cloud view")
-    driver.get(f'{os.environ["GIGANTUM_HOST"]}/projects/cloud')
-
-    sel = 'div[data-selenium-id="RemoteLabbookPanel"]:first-child'
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, sel)))
-    time.sleep(2)
-
-    ssel = f'{sel} span'
-    cloud_tab_first_project_title_publish = driver.find_element_by_css_selector(ssel).text
-    logging.info(f"!!!!! {cloud_tab_first_project_title_publish}")
-
-    assert cloud_tab_first_project_title_publish == project_title, \
-        f"Expected {project_title} to be the first project in the cloud tab"
-
-    logging.info("Testing git remotes to check if set...")
-    project_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username,
-                                'labbooks', project_title)
-    git_get_remote_command_1 = Popen(['git', 'remote', 'get-url', 'origin'],
-                                     cwd=project_path, stdout=PIPE, stderr=PIPE)
-    pub_stdout = git_get_remote_command_1.stdout.readline().decode('utf-8').strip()
-    assert "https://" in pub_stdout, f"Expected to see a remote set for private project " \
-                                     f"{project_title}, but got {pub_stdout}"
-
     # Test that after import, the shared project opens to overview page
-    shared_project_title = driver.find_element_by_css_selector(".TitleSection__namespace-title").text
+    shared_project_title = publish_elts.owner_title
     assert project_title in shared_project_title, \
         f"After import, expected shared project {project_title} to open to overview page"
 
     testutils.log_out(driver)
 
-    # Owner deletes cloud project
+    # Delete cloud project
+    logging.info(f"Logging in as {username}")
     testutils.log_in(driver)
     time.sleep(2)
     try:
@@ -206,23 +183,21 @@ def test_publish_collaborator(driver: selenium.webdriver, *args, ** kwargs):
     except:
         pass
     time.sleep(2)
-    logging.info(f"{username} deleting shared {project_title} from cloud")
-    publish_elts.cloud_tab.click()
-    time.sleep(2)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".RemoteLabbooks__panel-title")))
-    publish_elts.delete_project_button.click()
-    time.sleep(2)
-    publish_elts.delete_project_input.send_keys(project_title)
-    time.sleep(2)
-    publish_elts.delete_confirm_button.click()
-    time.sleep(5)
+    testutils.delete_project_cloud(driver, project_title)
+
+    # Assert project does not exist remotely (Via GraphQL).
+    # TODO - Put back in check for the UI in addition to this check.
+    remote_projects = graphql.list_remote_projects()
+    assert (username, project_title) not in remote_projects
+
+    # Check that the actual Git repo in the project had the remote removed successfully
+    # Note! Use Git 2.20+
+    logging.info("Testing git remotes to check if set...")
     project_path = os.path.join(os.environ['GIGANTUM_HOME'], username, username,
                                 'labbooks', project_title)
-    git_get_remote_command_1 = Popen(['git', 'remote', 'get-url', 'origin'],
+    git_get_remote_command_2 = Popen(['git', 'remote', 'get-url', 'origin'],
                                      cwd=project_path, stdout=PIPE, stderr=PIPE)
-    del_stderr = git_get_remote_command_1.stderr.readline().decode('utf-8').strip()
+    del_stderr = git_get_remote_command_2.stderr.readline().decode('utf-8').strip()
 
     assert "fatal" in del_stderr, f"Expected to not see a remote set for {project_title}, but got {del_stderr}"
-
-
 
